@@ -1,18 +1,51 @@
-import { useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { addUser } from './features/users';
 
 const App = () => {
+  const dispatch = useDispatch();
   const { value: userList } = useSelector((state) => state.users);
+
+  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
 
   return (
     <div className='App'>
       <div className='addUser'>
-        <input type='text' placeholder='Name...' />
-        <input type='text' placeholder='Username...' />
-        <button>Add User</button>
+        <input
+          type='text'
+          placeholder='Name...'
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          type='text'
+          placeholder='Username...'
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <button
+          onClick={() => {
+            dispatch(
+              addUser({
+                id: userList[userList.length - 1].id + 1,
+                name,
+                username,
+              })
+            );
+          }}
+        >
+          Add User
+        </button>
       </div>
       <div className='displayUsers'>
         {userList.map((user) => {
-          return <h1>{user.name}</h1>;
+          return (
+            <div key={user.id}>
+              <h1>{user.name}</h1>
+              <h1>{user.username}</h1>
+            </div>
+          );
         })}
       </div>
     </div>
