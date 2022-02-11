@@ -1,90 +1,21 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addUser, deleteUser, updateUsername } from './features/users';
+import { getPersons } from './features/persons';
 
 const App = () => {
   const dispatch = useDispatch();
-  const { value: userList } = useSelector((state) => state.users);
+  const { persons } = useSelector((state) => state.persons);
 
-  const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
-  const [newUsername, setNewUsername] = useState('');
+  useEffect(() => {
+    dispatch(getPersons());
+  }, [dispatch]);
 
   return (
     <div className='App'>
-      <div className='addUser'>
-        <input
-          type='text'
-          placeholder='Name...'
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          type='text'
-          placeholder='Username...'
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <button
-          onClick={() => {
-            dispatch(
-              addUser({
-                id: userList[userList.length - 1].id + 1,
-                name,
-                username,
-              })
-            );
-          }}
-        >
-          Add User
-        </button>
-      </div>
-      <div className='displayUsers'>
-        {userList.map((user) => {
-          return (
-            <div key={user.id}>
-              <h1>{user.name}</h1>
-              <h1>{user.username}</h1>
-              <input
-                type='text'
-                placeholder='New Username...'
-                onChange={(e) => setNewUsername(e.target.value)}
-              />
-              <button
-                onClick={() =>
-                  dispatch(
-                    updateUsername({ id: user.id, username: newUsername })
-                  )
-                }
-              >
-                Update Username
-              </button>
-              <button onClick={() => dispatch(deleteUser(user.id))}>
-                Delete User
-              </button>
-            </div>
-          );
-        })}
-      </div>
+      <h1>React Redux Toolkit Crash Course</h1>
+      {persons && persons.map((user, i) => <h1 key={i}>{user.name}</h1>)}
     </div>
   );
 };
 
 export default App;
-
-// old App
-// import Profile from './components/Profile';
-// import Login from './components/Login';
-// import ChangeColor from './components/ChangeColor';
-
-// const App = () => {
-//   return (
-//     <div className='container'>
-//       <Profile />
-//       <Login />
-//       <ChangeColor />
-//     </div>
-//   );
-// };
-
-// export default App;
